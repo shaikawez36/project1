@@ -21,15 +21,19 @@ st.markdown("""
 
 .stApp{
     background:#F5F7FA;
+    color:black;
 }
 
+/* Main Card */
 .main-box{
     background:white;
     padding:30px;
     border-radius:15px;
     box-shadow:0px 4px 12px rgba(0,0,0,0.15);
+    color:black;
 }
 
+/* Title */
 .title{
     font-size:42px;
     font-weight:bold;
@@ -37,25 +41,66 @@ st.markdown("""
     color:#1565C0;
 }
 
+/* Subtitle */
 .subtitle{
     text-align:center;
-    color:gray;
+    color:black;
     font-size:18px;
     margin-bottom:25px;
 }
 
+/* AI Response */
 .response{
     background:#E3F2FD;
     padding:20px;
     border-radius:12px;
     border-left:6px solid #1976D2;
-    color:black;
+    color:black !important;
     font-size:17px;
 }
 
+/* Make all text black */
+label,
+p,
+span,
+div,
+h2,
+h3,
+h4,
+h5,
+h6{
+    color:black !important;
+}
+
+/* Text Area */
+textarea{
+    color:black !important;
+    background:white !important;
+}
+
+/* Input Labels */
+.stTextArea label,
+.stTextInput label,
+.stSelectbox label,
+.stNumberInput label,
+.stSlider label{
+    color:black !important;
+}
+
+/* Info Box */
+[data-testid="stAlert"]{
+    color:black !important;
+}
+
+/* Caption */
+[data-testid="stCaptionContainer"]{
+    color:black !important;
+}
+
+/* Button */
 .stButton>button{
     background:#1976D2;
-    color:white;
+    color:white !important;
     height:55px;
     border-radius:10px;
     font-size:18px;
