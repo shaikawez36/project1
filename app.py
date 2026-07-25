@@ -6,74 +6,208 @@ from langchain_core.prompts import ChatPromptTemplate
 
 load_dotenv()
 
+# ---------------- PAGE CONFIG ---------------- #
+
 st.set_page_config(
-    page_title="Marketing Assistant",
-    page_icon="📈"
+    page_title="Marketing Assistant AI",
+    page_icon="📈",
+    layout="wide"
 )
 
-st.title("Marketing Assistant AI")
-st.write("This is an AI Marketing Assistant that helps with marketing strategies and content creation.")
+# ---------------- CUSTOM CSS ---------------- #
 
-st.write("Ask anything related to marketing")
+st.markdown("""
+<style>
 
-question = st.text_area(
-    "Enter Your Marketing Question"
+.stApp{
+    background:#F5F7FA;
+}
+
+.main-box{
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0px 4px 12px rgba(0,0,0,0.15);
+}
+
+.title{
+    font-size:42px;
+    font-weight:bold;
+    text-align:center;
+    color:#1565C0;
+}
+
+.subtitle{
+    text-align:center;
+    color:gray;
+    font-size:18px;
+    margin-bottom:25px;
+}
+
+.response{
+    background:#E3F2FD;
+    padding:20px;
+    border-radius:12px;
+    border-left:6px solid #1976D2;
+    color:black;
+    font-size:17px;
+}
+
+.stButton>button{
+    background:#1976D2;
+    color:white;
+    height:55px;
+    border-radius:10px;
+    font-size:18px;
+    font-weight:bold;
+    border:none;
+}
+
+.stButton>button:hover{
+    background:#0D47A1;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# ---------------- HEADER ---------------- #
+
+st.markdown(
+    "<div class='title'>📈 Marketing Assistant AI</div>",
+    unsafe_allow_html=True
 )
 
-if st.button("Ask AI"):
-    llm = ChatGroq(
-        model="llama-3.1-8b-instant",
-        temperature=0.3
+st.markdown(
+    "<div class='subtitle'>Get AI-powered marketing strategies, SEO tips, branding ideas, and campaign guidance.</div>",
+    unsafe_allow_html=True
+)
+
+# ---------------- MAIN CARD ---------------- #
+
+st.markdown("<div class='main-box'>", unsafe_allow_html=True)
+
+col1, col2 = st.columns([2,1])
+
+with col1:
+
+    question = st.text_area(
+        "💬 Enter Your Marketing Question",
+        height=180,
+        placeholder="Example: How can I increase Instagram engagement?"
     )
 
-    prompt = ChatPromptTemplate.from_template(
-        """
-        You are a Marketing Expert.
+with col2:
 
-        Your job is to answer ONLY marketing-related questions.
+    st.info("""
+### 💡 You can ask about
 
-        Topics include:
-        - Digital Marketing
-        - Social Media Marketing
-        - Content Marketing
-        - SEO (Search Engine Optimization)
-        - Email Marketing
-        - Branding
-        - Advertising Campaigns
-        - Marketing Strategy
-        - Market Research
-        - Target Audience
-        - Customer Engagement
-        - Lead Generation
-        - Influencer Marketing
-        - Product Launch
-        - Sales Funnel
-        - Marketing Analytics
-        - Copywriting
-        - Marketing Automation
+✅ SEO
 
-        If the user asks anything outside marketing,
-        reply:
+✅ Social Media
 
-        "Sorry, I only answer marketing-related questions."
+✅ Branding
 
-        Question:
-        {question}
+✅ Email Marketing
 
-        Provide:
-        1. Simple Explanation
-        2. Step-by-step guidance
-        3. Best Practices
-        4. Tips and Common Mistakes to Avoid
-        """
+✅ Content Marketing
+
+✅ Advertising
+
+✅ Market Research
+
+✅ Lead Generation
+""")
+
+st.write("")
+
+ask = st.button(
+    "🚀 Ask AI",
+    use_container_width=True
+)
+
+st.markdown("</div>", unsafe_allow_html=True)
+
+# ---------------- AI RESPONSE ---------------- #
+
+if ask:
+
+    with st.spinner("Generating marketing advice..."):
+
+        llm = ChatGroq(
+            model="llama-3.1-8b-instant",
+            temperature=0.3
+        )
+
+        prompt = ChatPromptTemplate.from_template(
+            """
+You are a Marketing Expert.
+
+Your job is to answer ONLY marketing-related questions.
+
+Topics include:
+
+- Digital Marketing
+- Social Media Marketing
+- Content Marketing
+- SEO
+- Email Marketing
+- Branding
+- Advertising Campaigns
+- Marketing Strategy
+- Market Research
+- Target Audience
+- Customer Engagement
+- Lead Generation
+- Influencer Marketing
+- Product Launch
+- Sales Funnel
+- Marketing Analytics
+- Copywriting
+- Marketing Automation
+
+If the question is not related to marketing reply:
+
+"Sorry, I only answer marketing-related questions."
+
+Question:
+{question}
+
+Provide:
+
+1. Simple Explanation
+
+2. Step-by-step guidance
+
+3. Best Practices
+
+4. Common Mistakes
+
+5. Final Recommendation
+"""
+        )
+
+        chain = prompt | llm
+
+        response = chain.invoke(
+            {
+                "question": question
+            }
+        )
+
+    st.write("")
+
+    st.subheader("📊 AI Marketing Advice")
+
+    st.markdown(
+        f"""
+<div class="response">
+
+{response.content}
+
+</div>
+""",
+        unsafe_allow_html=True
     )
 
-    chain = prompt | llm
-
-    response = chain.invoke(
-        {
-            "question": question
-        }
-    )
-
-    st.success(response.content)
+st.write("")
+st.caption("Built with ❤️ using Streamlit + LangChain + Groq")
